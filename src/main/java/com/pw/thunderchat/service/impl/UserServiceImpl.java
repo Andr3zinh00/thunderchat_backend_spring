@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.pw.thunderchat.errorhandler.NotFoundException;
 import com.pw.thunderchat.model.User;
 import com.pw.thunderchat.repository.UserRepository;
 import com.pw.thunderchat.service.UserService;
@@ -52,7 +53,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User login(String password, String login) {
 		return this.userRepository.findUserWithLoginAndPassword(login, password)
-				.orElseThrow(() -> new IllegalArgumentException(
+				.orElseThrow(() -> new NotFoundException(
 						"Credenciais fornecidas não são compativeis com os registros, verfique os dados informados!"));
 
 	}
