@@ -1,8 +1,13 @@
 package com.pw.thunderchat.service;
 
-import com.pw.thunderchat.model.Contact;
+import java.util.List;
 
+import com.pw.thunderchat.model.User;
+
+//
 public interface ContactService {
-	String addContact(String contactId, String userId);
-	Contact getContacts(String id); 
+	
+	List<User> getContacts(String userId);
+
+	String addContact(String mention, String userId);
 }

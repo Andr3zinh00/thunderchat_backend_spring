@@ -12,7 +12,7 @@ import com.pw.thunderchat.model.User;
 @Repository
 public interface UserRepository extends MongoRepository<User, String> {
 
-	@Query("{$or:[ {mention:?0}, {email:?1} ]")
+	@Query("{$or:[ {mention:?0}, {email:?1} ]}")
 	List<User> findUserByMentionOrEmail(String mention, String email);
 
 	@Query("{$and:[ {password:?1}, {$or:[ {mention:?0}, {email:?0} ] } ] }")

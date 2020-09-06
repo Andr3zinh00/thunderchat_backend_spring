@@ -15,8 +15,9 @@ public interface UserService {
 	User create(User user);
 
 	void delete(String id);
-	
+
 	User login(String password, String login);
+
 
 
 }

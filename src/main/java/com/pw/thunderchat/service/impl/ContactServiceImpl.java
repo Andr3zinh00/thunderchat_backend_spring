@@ -1,11 +1,9 @@
 package com.pw.thunderchat.service.impl;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import com.pw.thunderchat.errorhandler.InvalidOperationException;
@@ -26,55 +24,47 @@ public class ContactServiceImpl implements ContactService {
 	UserRepository userRepository;
 
 	@Override
-	public String addContact(String contactId, String userId) {
+	public String addContact(String mention, String userId) {
 
-		User user = this.userRepository.findById(contactId)
-				.orElseThrow(() -> new NotFoundException("Usuário inexistente!"));
+		List<User> users = this.userRepository.findUserByMentionOrEmail(mention, null);
 
-		Contact contact = new Contact();
-		contact.setUserId(userId);
+		if (users.isEmpty())
+			throw new NotFoundException("Mention não encontrada!");
 
-		Example<Contact> exemp = Example.of(contact);
+		User isGoingToBeAdded = users.get(0);
 
-		// caso seja o primeiro contato a ser adicionado, não haverá nenhum doc com o
-		// userId
-		// e a busca será nula
-		// e com o orElseGet ele recebe um novo Contact para ser adicionado no DB
-		Contact con = this.contactRepository.findOne(exemp).orElseGet(() -> new Contact());
+		Contact wantsToAdd = getContactByUserId(userId);
 
-		// caso o usuario já exista na lista de contatos
-		if (con.getContactsList().contains(user))
-			throw new InvalidOperationException("Usuário já existe em sua lista de contatos!");
+		if (wantsToAdd.getContactsList().contains(isGoingToBeAdded))
+			throw new InvalidOperationException("O usuário já está na lista de contatos!");
 
-		if (con.getContactsList() == null) {
-			List<User> list = new ArrayList<User>();
+		wantsToAdd.getContactsList().add(isGoingToBeAdded);
+		Contact alreadyAdded = getContactByUserId(isGoingToBeAdded.get_id());
 
-			con.setContactsList(list);
-			list.add(user);
-			con.setUserId(userId);
+		User user = this.userRepository.findById(wantsToAdd.getUserId())
+				.orElseThrow(() -> new NotFoundException("Usuário inexistente"));
 
-		} else
-			con.getContactsList().add(user);
+		alreadyAdded.getContactsList().add(user);
 
-		System.out.println(con);
-		this.contactRepository.save(con);
+		this.contactRepository.saveAll(Arrays.asList(alreadyAdded, wantsToAdd));
 
 		return "Contato adicionado com sucesso!";
 	}
 
 	@Override
-	public Contact getContacts(String id) {
-		Contact c = new Contact();
-		c.setUserId(id);
+	public List<User> getContacts(String userId) {
 
-		Example<Contact> ex = Example.of(c);
-		Optional<Contact> con = this.contactRepository.findOne(ex);
+		Contact con = getContactByUserId(userId);
 
-		// se o usuário existe no DB e a lista de contatos dele não está vazia
-		if (con.isPresent() && con.get().getContactsList().size() != 0)
-			return con.get();
+		if (con.getContactsList().size() == 0)
+			throw new NotFoundException("O usuário não possui contatos!");
 
-		throw new NotFoundException("O Usuário não possui contatos!");
+		return con.getContactsList();
+	}
+
+	public Contact getContactByUserId(String userId) {
+		return this.contactRepository.findContactByUserId(userId)
+				.orElseThrow(() -> new NotFoundException("Usuário inexistente"));
 	}
 
 }

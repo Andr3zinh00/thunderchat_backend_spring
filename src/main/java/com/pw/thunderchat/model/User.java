@@ -29,5 +29,6 @@ public class User  {
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
 	private LocalDate birth_date;
+	
 
 }

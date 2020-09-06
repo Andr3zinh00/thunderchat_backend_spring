@@ -1,12 +1,16 @@
 package com.pw.thunderchat.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.pw.thunderchat.errorhandler.InvalidOperationException;
 import com.pw.thunderchat.errorhandler.NotFoundException;
+import com.pw.thunderchat.model.Contact;
 import com.pw.thunderchat.model.User;
+import com.pw.thunderchat.repository.ContactRepository;
 import com.pw.thunderchat.repository.UserRepository;
 import com.pw.thunderchat.service.UserService;
 
@@ -15,6 +19,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private ContactRepository contactRepository;
 
 	@Override
 	public List<User> getAll() {
@@ -23,14 +30,22 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User create(User user) {
+		System.out.println(user);
+
 		List<User> users = this.userRepository.findUserByMentionOrEmail(user.getMention(), user.getEmail());
 
-		System.out.println(users);
-
 		if (users.size() != 0)
-			throw new IllegalArgumentException("Email ou @ já existem em nossa base!");
+			throw new InvalidOperationException("Email ou @ já existem em nossa base!");
 
-		return this.userRepository.save(user);
+		User nUser = this.userRepository.save(user);
+		
+		Contact c = new Contact();
+		c.setUserId(nUser.get_id());
+		c.setContactsList(new ArrayList<User>());
+		
+		this.contactRepository.save(c);
+		
+		return nUser;
 	}
 
 	@Override
@@ -40,7 +55,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User getUserById(String id) {
-		return this.userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Usuário inexistente"));
+		return this.userRepository.findById(id).orElseThrow(() -> new NotFoundException("Usuário inexistente"));
 
 	}
 
@@ -58,4 +73,5 @@ public class UserServiceImpl implements UserService {
 
 	}
 
+	
 }
