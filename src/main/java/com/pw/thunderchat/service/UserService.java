@@ -4,6 +4,10 @@ import java.util.List;
 
 import com.pw.thunderchat.model.User;
 
+/**
+ * @author André
+ * Contrato do service de usuário
+ */
 public interface UserService {
 
 	List<User> getAll();

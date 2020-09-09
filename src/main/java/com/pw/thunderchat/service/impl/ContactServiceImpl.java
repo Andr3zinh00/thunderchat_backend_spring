@@ -14,6 +14,11 @@ import com.pw.thunderchat.repository.ContactRepository;
 import com.pw.thunderchat.repository.UserRepository;
 import com.pw.thunderchat.service.ContactService;
 
+/**
+ * @author André
+ * Service de contato
+ * Implementação do contrato explicito na interface ContactService
+ */
 @Service
 public class ContactServiceImpl implements ContactService {
 

@@ -6,22 +6,28 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
-
+/**
+ * @author André
+ * Classe de configurações do websocket
+ */
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer {
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint("/").setAllowedOrigins("*").withSockJS();
+		registry.addEndpoint("/socket").setAllowedOrigins("http://localhost:3000")
+//				.setHandshakeHandler(new CustomHandshaker())
+				.withSockJS();
 	}
 
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry config) {
-		config.enableSimpleBroker("/topic", "/queue" ,"/user");
-        config.setApplicationDestinationPrefixes("/app");
-        config.setUserDestinationPrefix("/user");
+		config.enableSimpleBroker("/topic", "/queue", "/user");
+		config.setApplicationDestinationPrefixes("/app");
+		config.setUserDestinationPrefix("/user");
 
 	}
+
 
 }

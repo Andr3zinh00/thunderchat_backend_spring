@@ -10,10 +10,10 @@ import org.springframework.context.annotation.ComponentScan;
  *
  */
 @SpringBootApplication
-@ComponentScan({"com.pw.thunderchat.service", "com.pw.thunderchat.controller"})
+@ComponentScan({ "com.pw.thunderchat.service", "com.pw.thunderchat.controller", "com.pw.thunderchat.config",
+		"com.pw.thunderchat.utils" })
 public class ThunderchatApplication {
 
-	
 	public static void main(String[] args) {
 		SpringApplication.run(ThunderchatApplication.class, args);
 	}

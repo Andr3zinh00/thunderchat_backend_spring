@@ -8,6 +8,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * @author André
+ * Pensando em como implementar essa classe...
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

@@ -2,8 +2,6 @@ package com.pw.thunderchat.model;
 
 import java.util.List;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AllArgsConstructor;
@@ -12,20 +10,17 @@ import lombok.NoArgsConstructor;
 
 /**
  * @author André
- * Model de contatos de usuários
- * Lembrar de colocar os '@'NonNull
+ * Ainda estou decidindo como modelar as notificações...
  */
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Document(collection = "contacts")
-public class Contact {
+public class Notification {
 	
-	@Id
-	private String  _id;
+	private String _id;
 	
 	private String userId;
-
-	@DBRef
-	List<User> contactsList;
+	
+	private List<Messages> notificationContet; 
 }

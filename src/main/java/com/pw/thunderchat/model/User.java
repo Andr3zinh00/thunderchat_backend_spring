@@ -10,11 +10,14 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-
+/**
+ * @author André
+ * Classe de modelo para o Usuário da aplicação
+ */
 @Document(collection = "users")
 @AllArgsConstructor
 @Data
-public class User  {
+public class User {
 
 	@Id
 	private String _id;
@@ -26,9 +29,9 @@ public class User  {
 	private String password;
 
 	private String email;
+	
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
 	private LocalDate birth_date;
-	
 
 }
