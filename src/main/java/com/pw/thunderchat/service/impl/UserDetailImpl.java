@@ -31,14 +31,17 @@ public class UserDetailImpl implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userRepository.findUserByName(username);
-		System.out.println(user);
+		System.out.println(user + "entrei aqui");
 		if (user == null) {
 			throw new UsernameNotFoundException(username);
 		}
+		return userDetailWithRole(user.getMention(), user.getPassword());
+	}
+
+	public UserDetails userDetailWithRole(String mention, String password) {
 		List<GrantedAuthority> list = new ArrayList<GrantedAuthority>();
 		list.add(new SimpleGrantedAuthority("ROLE_USER"));
-		UserDetails details = new org.springframework.security.core.userdetails.User(user.getMention(),
-				user.getPassword(), list);
-		return details;
+		return new org.springframework.security.core.userdetails.User(mention, password, list);
 	}
+
 }

@@ -6,25 +6,22 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-/**
- * @author André
- *
- */
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Document(collection = "notifications")
-public class Notification {
-	
+@Document(value = "chats")
+public class Chat {
+
 	@Id
 	private String _id;
 	
-	@DBRef
-	private User user;
+	private List<Messages> messages;
 	
-	private List<Messages> notificationContent; 
+	@DBRef
+	private User user_1;
+
+	@DBRef
+	private User user_2;
+	
+	
 }

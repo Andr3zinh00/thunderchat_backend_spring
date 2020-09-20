@@ -2,6 +2,7 @@ package com.pw.thunderchat.service;
 
 import java.util.List;
 
+
 import com.pw.thunderchat.model.User;
 
 /**
@@ -21,6 +22,7 @@ public interface UserService {
 	void delete(String id);
 
 	User login(String password, String login);
+	
 
 
 

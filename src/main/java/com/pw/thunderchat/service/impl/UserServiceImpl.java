@@ -10,16 +10,17 @@ import org.springframework.stereotype.Service;
 import com.pw.thunderchat.errorhandler.InvalidOperationException;
 import com.pw.thunderchat.errorhandler.NotFoundException;
 import com.pw.thunderchat.model.Contact;
+import com.pw.thunderchat.model.Messages;
+import com.pw.thunderchat.model.Notification;
 import com.pw.thunderchat.model.User;
 import com.pw.thunderchat.repository.ContactRepository;
+import com.pw.thunderchat.repository.NotificationRepository;
 import com.pw.thunderchat.repository.UserRepository;
 import com.pw.thunderchat.service.UserService;
 
-
 /**
- * @author André
- * Service do Usuario
- * Implementação do contrato explicito na interface UserService
+ * @author André Service do Usuario Implementação do contrato explicito na
+ *         interface UserService
  */
 @Service
 public class UserServiceImpl implements UserService {
@@ -30,13 +31,17 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private ContactRepository contactRepository;
 
+	@Autowired
+	private NotificationRepository notificationRepository;
+
 	/**
-	 *Fiz apenas por formalidade, mas aparentemente, não será utilizado em nenhum lugar da aplicação...
+	 * Fiz apenas por formalidade, mas aparentemente, não será utilizado em nenhum
+	 * lugar da aplicação...
 	 */
 	@Deprecated
 	@Override
 	public List<User> getAll() {
-		
+
 		return this.userRepository.findAll();
 	}
 
@@ -58,8 +63,15 @@ public class UserServiceImpl implements UserService {
 		c.setUserId(nUser.get_id());
 		c.setContactsList(new ArrayList<User>());
 
-		this.contactRepository.save(c);
+		Notification notif = new Notification();
+		notif.setNotificationContent(new ArrayList<Messages>());
+		notif.setUser(user);
 
+
+		this.contactRepository.save(c);
+		this.notificationRepository.save(notif);
+		
+		
 		return nUser;
 	}
 
@@ -84,11 +96,11 @@ public class UserServiceImpl implements UserService {
 	public User login(String password, String login) {
 		BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
 		User u = this.userRepository.findUserByName(login);
-		
+
 		if (u == null)
 			throw new NotFoundException(
 					"Login fornecido não é compativel com nenhum registro, verfique os dados informados!");
-		
+
 		if (bc.matches(password, u.getPassword()))
 			return u;
 

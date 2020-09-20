@@ -4,20 +4,21 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import com.pw.thunderchat.errorhandler.InvalidOperationException;
 import com.pw.thunderchat.errorhandler.NotFoundException;
 import com.pw.thunderchat.model.Contact;
+import com.pw.thunderchat.model.Messages;
 import com.pw.thunderchat.model.User;
 import com.pw.thunderchat.repository.ContactRepository;
 import com.pw.thunderchat.repository.UserRepository;
 import com.pw.thunderchat.service.ContactService;
 
 /**
- * @author André
- * Service de contato
- * Implementação do contrato explicito na interface ContactService
+ * @author André Service de contato Implementação do contrato explicito na
+ *         interface ContactService
  */
 @Service
 public class ContactServiceImpl implements ContactService {
@@ -27,6 +28,9 @@ public class ContactServiceImpl implements ContactService {
 
 	@Autowired
 	UserRepository userRepository;
+
+	@Autowired
+	SimpMessagingTemplate simpMessageTemplate;
 
 	@Override
 	public String addContact(String mention, String userId) {
@@ -52,6 +56,10 @@ public class ContactServiceImpl implements ContactService {
 		alreadyAdded.getContactsList().add(user);
 
 		this.contactRepository.saveAll(Arrays.asList(alreadyAdded, wantsToAdd));
+		
+//		Messages msg = new Messages(user.getMention()+" aceitou seu pedido e agora está na sua lista de contatos :D");
+
+		simpMessageTemplate.convertAndSendToUser(isGoingToBeAdded.getMention(), "/queue/sendback", "");
 
 		return "Contato adicionado com sucesso!";
 	}

@@ -16,8 +16,7 @@ import com.pw.thunderchat.service.impl.UserDetailImpl;
 import com.pw.thunderchat.utils.JWTFilter;
 
 /**
- * @author André
- * Classe de configurações de segurança do Spring security
+ * @author André Classe de configurações de segurança do Spring security
  */
 @EnableWebSecurity
 @Configuration
@@ -27,8 +26,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	private UserDetailImpl userDetail;
 
 	/**
-	 * Configura qual é a classe a ser usada na autenticação de requisições,
-	 * neste caso usará o service criado do UserDetail 
+	 * Configura qual é a classe a ser usada na autenticação de requisições, neste
+	 * caso usara o service criado do UserDetail
+	 * 
 	 * @param builder
 	 * @throws Exception
 	 */
@@ -41,7 +41,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	private JWTFilter jwtFilter;
 
 	/**
-	 * Bean para usar a classe pai do authentication manager nos #Autowired na autorização JWT
+	 * Bean para usar a classe pai do authentication manager nos #Autowired na
+	 * autorização JWT
 	 */
 	@Override
 	@Bean
@@ -49,9 +50,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		return super.authenticationManagerBean();
 	}
 
-
 	/**
 	 * Bean para encriptar senhas na autenticação
+	 * 
 	 * @return
 	 */
 	@Bean
@@ -59,18 +60,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		return new BCryptPasswordEncoder();
 	}
 
-	/**
-	 * configura os tipos de requisições aceitas
-	 */
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 
 //		http.cors().and().authorizeRequests().anyRequest().authenticated().and().httpBasic();
-		http.cors().and().authorizeRequests().antMatchers("/user/authenticate", "/user/create").permitAll().anyRequest().authenticated()
-				.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		http.cors().and().authorizeRequests().antMatchers("/user/create", "/user/login", "/notifications").permitAll()
+				.anyRequest().authenticated().and().sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 		http.csrf().disable();
 	}
 
-	
 }

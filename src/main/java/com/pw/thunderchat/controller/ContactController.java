@@ -1,5 +1,7 @@
 
 package com.pw.thunderchat.controller;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +20,7 @@ import com.pw.thunderchat.service.ContactService;
 @RestController
 @RequestMapping("/contact")
 public class ContactController {
-	
+
 	@Autowired
 	ContactService contactService;
 
@@ -28,8 +30,8 @@ public class ContactController {
 	}
 
 	@GetMapping("/{id}")
-	public List<User> getContacts(@PathVariable(value = "id") String id) {
-		return this.contactService.getContacts(id);
+	public Map<String, List<User>> getContacts(@PathVariable(value = "id") String id) {
+		return Collections.singletonMap("contacts", this.contactService.getContacts(id));
 	}
 
 }
