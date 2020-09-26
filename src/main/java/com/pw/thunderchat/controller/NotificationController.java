@@ -8,11 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pw.thunderchat.model.Messages;
@@ -23,13 +20,10 @@ import com.pw.thunderchat.service.NotificationService;
 public class NotificationController {
 
 	@Autowired
-	SimpMessagingTemplate simpMessageTemplate;
-
-	@Autowired
 	NotificationService notificationService;
 
 	/**
-	 * MOVER TODA A PARTE DE MANDAR A NOTIFICAÇÃO PARA O SERVICE DE NOTIFICAÇÕES!!!!
+	 * Controller que manda pedidos de notificações
 	 * @param message
 	 * @param notification
 	 * @throws Exception
@@ -42,7 +36,7 @@ public class NotificationController {
 
 		
 		this.notificationService.registerNotification(notification);
-		simpMessageTemplate.convertAndSendToUser(notification.getTo(), "/queue/sendback", notification);
+	
 	}
 
 	@GetMapping("/notifications/{id}")
@@ -50,10 +44,4 @@ public class NotificationController {
 		return Collections.singletonMap("notifications", this.notificationService.getAllNotificationById(id));
 	}
 	
-	@PostMapping("/notifications")
-	public String a(@RequestBody Messages msg) {
-		this.notificationService.registerNotification(msg);
-		return "IHULLL";
-	}
-
 }

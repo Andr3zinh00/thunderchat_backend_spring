@@ -26,7 +26,7 @@ public class UserDetailImpl implements UserDetailsService {
 	private UserRepository userRepository;
 
 	/**
-	 * Load by user para autenticação JWT
+	 * Load by username para autenticação JWT
 	 */
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

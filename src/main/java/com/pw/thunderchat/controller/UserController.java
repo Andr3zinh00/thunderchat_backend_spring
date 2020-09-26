@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,6 +39,11 @@ public class UserController {
 	@Autowired
 	private JWTUtils jwtUtils;
 
+	/**
+	 * Fiz apenas por formalidade, mas aparentemente, não será utilizado em nenhum
+	 * lugar da aplicação...
+	 */
+	@Deprecated
 	@GetMapping(path = "/get-all")
 	public List<User> getAll() {
 		return this.userService.getAll();
@@ -62,7 +68,7 @@ public class UserController {
 
 		//
 		final UserDetails user = userDetailsImpl.userDetailWithRole(userLogin.getMention(), userLogin.getPassword());
-		
+
 		System.out.println(user);
 
 		final String token = jwtUtils.generateToken(user);
@@ -71,6 +77,11 @@ public class UserController {
 //		ResponseEntity.ok(new AuthenticationResponse(token));
 		return returnedMap;
 
+	}
+
+	@PutMapping("/update")
+	public User update(@RequestBody User user) {
+		return this.userService.update(user);
 	}
 
 }

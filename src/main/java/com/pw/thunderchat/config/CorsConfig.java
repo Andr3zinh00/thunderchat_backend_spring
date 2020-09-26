@@ -6,18 +6,17 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- * @author André
- * Adiciona configurações cors para requisições na API
+ * @author André Adiciona configurações cors para requisições na API
  */
 @Configuration
 @EnableWebMvc
-public class WebConfig implements WebMvcConfigurer {
-	
+public class CorsConfig implements WebMvcConfigurer {
+
 	/**
-	 * Mapeamento do cors 
+	 * Mapeamento do cors
 	 */
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
-		registry.addMapping("/**").allowedOrigins("*").allowedHeaders("*");
+		registry.addMapping("/**").allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH");
 	}
 }

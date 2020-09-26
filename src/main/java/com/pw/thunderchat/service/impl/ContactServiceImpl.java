@@ -1,6 +1,7 @@
 package com.pw.thunderchat.service.impl;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.pw.thunderchat.errorhandler.InvalidOperationException;
 import com.pw.thunderchat.errorhandler.NotFoundException;
 import com.pw.thunderchat.model.Contact;
+import com.pw.thunderchat.model.EMessageType;
 import com.pw.thunderchat.model.Messages;
 import com.pw.thunderchat.model.User;
 import com.pw.thunderchat.repository.ContactRepository;
@@ -44,10 +46,11 @@ public class ContactServiceImpl implements ContactService {
 
 		Contact wantsToAdd = getContactByUserId(userId);
 
-		if (wantsToAdd.getContactsList().contains(isGoingToBeAdded))
+		List<User> listWant = wantsToAdd.getContactsList();
+		if (listWant.contains(isGoingToBeAdded))
 			throw new InvalidOperationException("O usuário já está na lista de contatos!");
 
-		wantsToAdd.getContactsList().add(isGoingToBeAdded);
+		listWant.add(isGoingToBeAdded);
 		Contact alreadyAdded = getContactByUserId(isGoingToBeAdded.get_id());
 
 		User user = this.userRepository.findById(wantsToAdd.getUserId())
@@ -56,10 +59,12 @@ public class ContactServiceImpl implements ContactService {
 		alreadyAdded.getContactsList().add(user);
 
 		this.contactRepository.saveAll(Arrays.asList(alreadyAdded, wantsToAdd));
-		
-//		Messages msg = new Messages(user.getMention()+" aceitou seu pedido e agora está na sua lista de contatos :D");
 
-		simpMessageTemplate.convertAndSendToUser(isGoingToBeAdded.getMention(), "/queue/sendback", "");
+
+		Messages msg = new Messages(user.getMention() + " aceitou seu pedido e agora está na sua lista de contatos :D",
+				"SYSTEM", isGoingToBeAdded.getMention(), EMessageType.INVITE_ACCEPTED, new Date());
+		
+		simpMessageTemplate.convertAndSendToUser(isGoingToBeAdded.getMention(), "/queue/sendback", msg);
 
 		return "Contato adicionado com sucesso!";
 	}

@@ -34,11 +34,6 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private NotificationRepository notificationRepository;
 
-	/**
-	 * Fiz apenas por formalidade, mas aparentemente, não será utilizado em nenhum
-	 * lugar da aplicação...
-	 */
-	@Deprecated
 	@Override
 	public List<User> getAll() {
 
@@ -67,11 +62,9 @@ public class UserServiceImpl implements UserService {
 		notif.setNotificationContent(new ArrayList<Messages>());
 		notif.setUser(user);
 
-
 		this.contactRepository.save(c);
 		this.notificationRepository.save(notif);
-		
-		
+
 		return nUser;
 	}
 
@@ -106,6 +99,39 @@ public class UserServiceImpl implements UserService {
 
 		throw new NotFoundException(
 				"Credenciais fornecidas não são compativeis com os registros, verfique os dados informados!");
+	}
+
+	@Override
+	public User update(User user) {
+		System.out.println(user + "   userFromRequest");
+		List<User> possibleUsers = this.userRepository.findUserByMentionOrEmail(user.getMention(), user.getEmail());
+		System.out.println(possibleUsers);
+
+		if (possibleUsers.size() > 1)
+			throw new InvalidOperationException("A @ ou email escolhidos já estão em uso!");
+
+		User retrievedUser = possibleUsers.get(0);
+
+		System.out.println(retrievedUser + " retrievedUser");
+		parseUser(retrievedUser, user);
+		System.out.println(retrievedUser + " retrievedUser after parse");
+
+		return this.userRepository.save(retrievedUser);
+	}
+
+	public void parseUser(User userFromDb, User userFromRequest) {
+
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		if (!encoder.matches(userFromRequest.getPassword(), userFromDb.getPassword())) {
+			String encodedPassword = encoder.encode(userFromRequest.getPassword());
+			System.out.println("Não é igual!");
+			userFromDb.setPassword(encodedPassword);
+		}
+
+		userFromDb.setEmail(userFromRequest.getEmail());
+		userFromDb.setBirth_date(userFromRequest.getBirth_date());
+		userFromDb.setMention(userFromRequest.getMention());
+		userFromDb.setName(userFromRequest.getName());
 	}
 
 }

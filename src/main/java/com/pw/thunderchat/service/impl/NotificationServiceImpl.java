@@ -3,6 +3,7 @@ package com.pw.thunderchat.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import com.pw.thunderchat.errorhandler.NotFoundException;
@@ -18,6 +19,10 @@ public class NotificationServiceImpl implements NotificationService {
 
 	@Autowired
 	NotificationRepository notificationRepository;
+	
+
+	@Autowired
+	SimpMessagingTemplate simpMessageTemplate;
 
 	@Autowired
 	UserRepository userRepo;
@@ -39,7 +44,8 @@ public class NotificationServiceImpl implements NotificationService {
 
 		list.add(msg);
 
-		this.notificationRepository.save(notifications);
+		this.notificationRepository.save(notifications);	
+		simpMessageTemplate.convertAndSendToUser(msg.getTo(), "/queue/sendback", msg);
 
 	}
 
