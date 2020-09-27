@@ -16,6 +16,7 @@ import com.pw.thunderchat.model.Messages;
 import com.pw.thunderchat.model.User;
 import com.pw.thunderchat.repository.ContactRepository;
 import com.pw.thunderchat.repository.UserRepository;
+import com.pw.thunderchat.service.ChatService;
 import com.pw.thunderchat.service.ContactService;
 
 /**
@@ -30,6 +31,9 @@ public class ContactServiceImpl implements ContactService {
 
 	@Autowired
 	UserRepository userRepository;
+	
+	@Autowired
+	ChatService chatService;
 
 	@Autowired
 	SimpMessagingTemplate simpMessageTemplate;
@@ -60,6 +64,8 @@ public class ContactServiceImpl implements ContactService {
 
 		this.contactRepository.saveAll(Arrays.asList(alreadyAdded, wantsToAdd));
 
+		// quem mandou o pedido é o memberOne do chat
+		this.chatService.create(user, isGoingToBeAdded);
 
 		Messages msg = new Messages(user.getMention() + " aceitou seu pedido e agora está na sua lista de contatos :D",
 				"SYSTEM", isGoingToBeAdded.getMention(), EMessageType.INVITE_ACCEPTED, new Date());

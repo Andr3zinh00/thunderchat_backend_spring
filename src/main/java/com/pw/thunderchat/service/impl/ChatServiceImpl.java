@@ -38,15 +38,20 @@ public class ChatServiceImpl implements ChatService {
 		// boa velocidade de comunicação ou boa persistencia?
 
 		// boa velocidade de comunicação
-		// this.simpMessageTemplate.convertAndSendToUser(msg.getTo(), "/queue/chat-msg",
-		// msg);
+		this.simpMessageTemplate.convertAndSendToUser(msg.getTo(), "/queue/get-msg", msg);
+		// manda para o proprio remetente pra caso ele estiver usando multiplas abas
+		this.simpMessageTemplate.convertAndSendToUser(msg.getFrom(), "/queue/get-msg", msg);
 
-		User member = this.userRepository.findUserByName(msg.getTo());
+		System.out.println(msg);
 
-		if (member == null)
+		User memberOne = this.userRepository.findUserByName(msg.getTo());
+		User memberTwo = this.userRepository.findUserByName(msg.getFrom());
+
+		System.out.println("userone: " + memberOne + " usertwo: " + memberTwo);
+		if (memberOne == null || memberTwo == null)
 			return;
 
-		Optional<Chat> chatOpt = this.chatRepository.findChatByMember(member);
+		Optional<Chat> chatOpt = this.chatRepository.findChatByMember(memberOne.get_id(), memberTwo.get_id());
 
 		if (chatOpt.isPresent()) {
 			Chat chat = chatOpt.get();
@@ -55,8 +60,9 @@ public class ChatServiceImpl implements ChatService {
 			messages.add(msg);
 			this.chatRepository.save(chat);
 
-			// boa persistencia
-			this.simpMessageTemplate.convertAndSendToUser(msg.getTo(), "/queue/chat-msg", msg);
+			// boa persistencia, primeiramente salva as msgs no bd e depois manda para os destinatarios
+//			this.simpMessageTemplate.convertAndSendToUser(msg.getTo(), "/queue/get-msg", msg);
+//			this.simpMessageTemplate.convertAndSendToUser(msg.getFrom(), "/queue/get-msg", msg);
 		}
 
 	}
