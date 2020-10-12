@@ -13,14 +13,17 @@ import com.pw.thunderchat.model.Contact;
 import com.pw.thunderchat.model.Messages;
 import com.pw.thunderchat.model.Notification;
 import com.pw.thunderchat.model.User;
+import com.pw.thunderchat.repository.ChatRepository;
 import com.pw.thunderchat.repository.ContactRepository;
 import com.pw.thunderchat.repository.NotificationRepository;
 import com.pw.thunderchat.repository.UserRepository;
 import com.pw.thunderchat.service.UserService;
 
 /**
- * @author André Service do Usuario Implementação do contrato explicito na
- *         interface UserService
+ * Service do Usuario Implementação do contrato explicito na interface
+ * UserService
+ * 
+ * @author André
  */
 @Service
 public class UserServiceImpl implements UserService {
@@ -33,6 +36,10 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private NotificationRepository notificationRepository;
+
+	@Autowired
+	private ChatRepository chatRepository;
+
 
 	@Override
 	public List<User> getAll() {
@@ -67,8 +74,9 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void delete(String id) {
-		this.userRepository.deleteById(id);
+	public User delete(String id) {
+		
+		return this.userRepository.deleteByIdAndGet(id).orElseThrow(() -> new NotFoundException("Usuário inexistente!"));
 	}
 
 	@Override

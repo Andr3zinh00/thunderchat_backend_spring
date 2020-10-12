@@ -91,28 +91,32 @@ public class ContactServiceImpl implements ContactService {
 		return con.getContactsList();
 	}
 
+	@Override
+	public Contact delContact(String wantToDel, String toDel) {
+		if (wantToDel.equals(toDel))
+			throw new InvalidOperationException("Você está tentando se deletar da sua lista de contatos? (￢_￢)");
+
+		Contact contact = getContactByUserId(wantToDel);
+		Contact contactToDel = getContactByUserId(toDel);
+
+		System.out.println(toDel);
+		if (removeFromContactsList(contact.getContactsList(), toDel)
+				&& removeFromContactsList(contactToDel.getContactsList(), wantToDel)) {
+			this.chatService.delete(wantToDel, toDel);
+			System.out.println(this.contactRepository.saveAll(Arrays.asList(contact, contactToDel)).get(0));
+			return contact;
+		}
+		throw new BadRequestException("Verifique as credenciais informadas!");
+	}
+
 	public Contact getContactByUserId(String userId) {
 		return this.contactRepository.findContactByUserId(userId)
 				.orElseThrow(() -> new NotFoundException("Usuário inexistente!"));
 
 	}
 
-	@Override
-	public Contact delContact(String wantToDel, String toDel) {
-		if (wantToDel.equals(toDel))
-			throw new InvalidOperationException("Você está tentando se deletar da sua lista de contatos? (￢_￢)");
-
-		Contact contact = this.contactRepository.findContactByUserId(wantToDel)
-				.orElseThrow(() -> new NotFoundException("Não foi possível encontrar os contatos do id: " + wantToDel));
-
-		System.out.println(contact + " contact");
-		System.out.println(toDel);
-		if (contact.getContactsList().removeIf(user -> toDel.equals(user.get_id()))) {
-			this.chatService.delete(wantToDel, toDel);
-			System.out.println(contact + " contact");
-			return this.contactRepository.save(contact);
-		}
-		throw new BadRequestException("Verifique as credenciais informadas!");
+	public boolean removeFromContactsList(List<User> contacts, String id) {
+		return contacts.removeIf(user -> id.equals(user.get_id()));
 	}
 
 }

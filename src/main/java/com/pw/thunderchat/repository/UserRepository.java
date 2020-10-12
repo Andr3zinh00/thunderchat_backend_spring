@@ -3,6 +3,7 @@ package com.pw.thunderchat.repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.mongodb.repository.DeleteQuery;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -20,4 +21,7 @@ public interface UserRepository extends MongoRepository<User, String> {
 
 	@Query("{$and:[ {password:?1}, {$or:[ {mention:?0}, {email:?0} ] } ] }")
 	Optional<User> findUserWithLoginAndPassword(String login, String password);
+	
+	@DeleteQuery("{ _id: ?0 }")
+	Optional<User> deleteByIdAndGet(String id);
 }
