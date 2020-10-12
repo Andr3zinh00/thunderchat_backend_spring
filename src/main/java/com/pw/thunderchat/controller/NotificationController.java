@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.pw.thunderchat.model.Messages;
 import com.pw.thunderchat.service.NotificationService;
 
-import io.swagger.annotations.ApiOperation;
-
 @RestController
 public class NotificationController {
 
@@ -27,7 +25,6 @@ public class NotificationController {
 	 * @param notification
 	 * @throws Exception
 	 */
-	@ApiOperation(value = "Manda uma notificação para o usuário")
 	@MessageMapping("/send-notification")
 	public void send(@Payload Messages notification) throws Exception {
 
@@ -42,7 +39,7 @@ public class NotificationController {
 	/**
 	 * Pega todas as notificações de um usuário 
 	 * @param id
-	 * @return
+	 * @return o array de todas as notificações do usuário 
 	 */
 	@GetMapping("/notifications/{id}")
 	public Map<String, List<Messages>> getAllNotificationsFromUser(@PathVariable String id) {

@@ -2,6 +2,7 @@ package com.pw.thunderchat.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.pw.thunderchat.errorhandler.InvalidOperationException;
 import com.pw.thunderchat.errorhandler.NotFoundException;
+import com.pw.thunderchat.model.Chat;
 import com.pw.thunderchat.model.Contact;
 import com.pw.thunderchat.model.Messages;
 import com.pw.thunderchat.model.Notification;
@@ -40,10 +42,8 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private ChatRepository chatRepository;
 
-
 	@Override
 	public List<User> getAll() {
-
 		return this.userRepository.findAll();
 	}
 
@@ -75,8 +75,19 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User delete(String id) {
-		
-		return this.userRepository.deleteByIdAndGet(id).orElseThrow(() -> new NotFoundException("Usuário inexistente!"));
+		// deleta os relacionamentos do usuário... o mongo nao tem on cascade ;-;
+		this.notificationRepository.delete(this.notificationRepository.getByUserId(id)
+				.orElseThrow(() -> new NotFoundException(("Usuário inexistente!"))));
+
+		this.contactRepository.delete(this.contactRepository.findContactByUserId(id)
+				.orElseThrow(() -> new NotFoundException(("Usuário inexistente!"))));
+
+		Optional<List<Chat>> optChats = this.chatRepository.findAllChatsByUserId(id);
+		if (optChats.isPresent())
+			this.chatRepository.deleteAll(optChats.get());
+
+		return this.userRepository.deleteByIdAndGet(id)
+				.orElseThrow(() -> new NotFoundException("Usuário inexistente!"));
 	}
 
 	@Override
@@ -130,7 +141,6 @@ public class UserServiceImpl implements UserService {
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		if (!encoder.matches(userFromRequest.getPassword(), userFromDb.getPassword())) {
 			String encodedPassword = encoder.encode(userFromRequest.getPassword());
-			System.out.println("Não é igual!");
 			userFromDb.setPassword(encodedPassword);
 		}
 

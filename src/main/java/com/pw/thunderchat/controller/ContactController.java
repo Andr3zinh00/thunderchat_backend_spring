@@ -18,6 +18,8 @@ import com.pw.thunderchat.model.Contact;
 import com.pw.thunderchat.model.User;
 import com.pw.thunderchat.service.ContactService;
 
+import io.swagger.annotations.ApiOperation;
+
 //
 @RestController
 @RequestMapping("/contact")
@@ -27,6 +29,9 @@ public class ContactController {
 	ContactService contactService;
 
 	@PostMapping("/add")
+	@ApiOperation("Este método emite uma mensagem (websocket) na rota (/queue/sendback), caso a operação (addContact)"
+			+ " seja concluida com sucesso, esta mensagem deve ser capturada no frontend para fazer "
+			+ "a adição do funcionario em tempo real")
 	public Map<String, String> addContact(@RequestBody Map<String, String> json) {
 		return Collections.singletonMap("message",
 				this.contactService.addContact(json.get("mention"), json.get("userId")));
@@ -38,6 +43,7 @@ public class ContactController {
 	}
 
 	@DeleteMapping("/{wantToDel}/{toDel}")
+	@ApiOperation("Não existe diferença na ordem entre os id(s) informados")
 	public Contact deleteContact(@PathVariable("wantToDel") String wantTodel, @PathVariable("toDel") String toDel) {
 
 		return this.contactService.delContact(wantTodel, toDel);

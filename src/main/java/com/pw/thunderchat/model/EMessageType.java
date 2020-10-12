@@ -7,5 +7,6 @@ package com.pw.thunderchat.model;
 public enum EMessageType {
 	CHAT,
 	INVITE,
-	INVITE_ACCEPTED
+	INVITE_ACCEPTED,
+	DELETED_USER
 }

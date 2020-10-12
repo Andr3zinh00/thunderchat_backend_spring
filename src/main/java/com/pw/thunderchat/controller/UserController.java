@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.pw.thunderchat.errorhandler.BadRequestException;
 import com.pw.thunderchat.model.AuthenticationRequest;
 import com.pw.thunderchat.model.AuthenticationResponse;
 import com.pw.thunderchat.model.User;
@@ -37,7 +39,7 @@ public class UserController {
 	private JWTUtils jwtUtils;
 
 	/**
-	 * Fiz apenas por formalidade, mas aparentemente, não será utilizado em nenhum
+	 * Fiz apenas por formalidade, mas, aparentemente, não será utilizado em nenhum
 	 * lugar da aplicação...
 	 */
 	@Deprecated
@@ -60,12 +62,11 @@ public class UserController {
 	public Map<String, Object> authenticate(@RequestBody AuthenticationRequest authRequest) {
 
 		System.out.println(authRequest);
-		
+
 		Map<String, Object> returnedMap = new HashMap<>();
 
 		User userLogin = userService.login(authRequest.getPassword(), authRequest.getUsername());
 
-		//
 		final UserDetails user = userDetailsImpl.userDetailWithRole(userLogin.getMention(), userLogin.getPassword());
 
 		System.out.println(user);
@@ -78,15 +79,16 @@ public class UserController {
 
 	}
 
-	@PutMapping("/update")
-	public User update(@RequestBody User user) {
+	@PutMapping("/{id}")
+	public User update(@RequestBody User user, @PathVariable String id) {
 
+		if (!id.equals(user.get_id()))
+			throw new BadRequestException("O id informado não é invalido para o usuário que deseja alterar");
 		return this.userService.update(user);
 	}
 
 	@DeleteMapping("/{id}")
-	@ApiOperation("O mongo não tem delete on cascade, ainda falta implementar o delete dos relacionamentos do usuário"
-			+ ", mas o delete do user em si já esta funcionando ")
+	@ApiOperation("Esse metodo deleta um user e seus relacionamentos sdds ON CASCADE ;-;")
 	public User delUser(@PathVariable String id) {
 		return this.userService.delete(id);
 	}

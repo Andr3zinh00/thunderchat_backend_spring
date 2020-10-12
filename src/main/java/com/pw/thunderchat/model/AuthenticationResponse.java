@@ -3,10 +3,10 @@ package com.pw.thunderchat.model;
 import java.io.Serializable;
 
 /**
+ * Model de resposta das verificações JWT da aplicação Sempre que um User for
+ * validado, ele recebera um objeto desta classe como resposta
+ * 
  * @author André
- * Model de resposta das verificações JWT da aplicação 
- * Sempre que um User for validado, ele recebera um objeto desta classe 
- * como resposta
  */
 public class AuthenticationResponse implements Serializable {
 

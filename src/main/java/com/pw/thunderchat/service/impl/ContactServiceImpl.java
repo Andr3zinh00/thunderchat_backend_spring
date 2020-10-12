@@ -40,7 +40,7 @@ public class ContactServiceImpl implements ContactService {
 	SimpMessagingTemplate simpMessageTemplate;
 
 	/**
-	 * KKKKKKKKKKKKKK QUE MERDA FOI ESSA Q EU FIZ NEM CONSIGO MAIS ENTENDER O QUE
+	 * KKKKKKKKKKKKKK QUE MERDA FOI ESSA Q EU FIZ? NEM CONSIGO MAIS ENTENDER O QUE
 	 * ISSO ESTA FAZENDO DIREITO
 	 */
 	@Override
@@ -82,13 +82,7 @@ public class ContactServiceImpl implements ContactService {
 
 	@Override
 	public List<User> getContacts(String userId) {
-
-		Contact con = getContactByUserId(userId);
-
-		if (con.getContactsList().size() == 0)
-			throw new NotFoundException("O usuário não possui contatos!");
-
-		return con.getContactsList();
+		return getContactByUserId(userId).getContactsList();
 	}
 
 	@Override

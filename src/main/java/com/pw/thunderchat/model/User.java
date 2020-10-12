@@ -11,10 +11,10 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-
 /**
- * @author André
  * Classe de modelo para o Usuário da aplicação
+ * 
+ * @author André
  */
 @Document(collection = "users")
 @AllArgsConstructor
@@ -35,10 +35,9 @@ public class User {
 	private Date birth_date;
 
 	private String email;
-	
 
 	public User() {
-		
+
 	}
 
 }

@@ -6,24 +6,28 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.mongodb.lang.NonNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * @author André
  * Model de contatos de usuários
- * Lembrar de colocar os '@'NonNull
+ * 
+ * @author André
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection = "contacts")
 public class Contact {
-	
+
 	@Id
-	private String  _id;
-	
+	private String _id;
+
+	@DBRef
+	@NonNull
 	private String userId;
 
 	@DBRef

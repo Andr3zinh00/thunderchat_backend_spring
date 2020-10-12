@@ -7,7 +7,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * @author André Model das mensagens entre usuário ou de notificações
+ * Model das mensagens entre usuário ou de notificações
+ * 
+ * @author André
  */
 @Data
 @NoArgsConstructor

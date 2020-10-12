@@ -1,10 +1,15 @@
 package com.pw.thunderchat.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 /**
  * @author André
- * Implementar resposta padrao pra todos os endpoints
- * @param <T>
+ * @param <T> o tipo de dado retornado na resposta
  */
+@Data
+@AllArgsConstructor
 public class Response<T> {
-
+	private String message;
+	private T content;
 }
