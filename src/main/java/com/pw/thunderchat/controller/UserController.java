@@ -21,6 +21,8 @@ import com.pw.thunderchat.service.UserService;
 import com.pw.thunderchat.service.impl.UserDetailImpl;
 import com.pw.thunderchat.utils.JWTUtils;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -57,6 +59,8 @@ public class UserController {
 	@PostMapping("/login")
 	public Map<String, Object> authenticate(@RequestBody AuthenticationRequest authRequest) {
 
+		System.out.println(authRequest);
+		
 		Map<String, Object> returnedMap = new HashMap<>();
 
 		User userLogin = userService.login(authRequest.getPassword(), authRequest.getUsername());
@@ -81,6 +85,8 @@ public class UserController {
 	}
 
 	@DeleteMapping("/{id}")
+	@ApiOperation("O mongo não tem delete on cascade, ainda falta implementar o delete dos relacionamentos do usuário"
+			+ ", mas o delete do user em si já esta funcionando ")
 	public User delUser(@PathVariable String id) {
 		return this.userService.delete(id);
 	}

@@ -11,6 +11,8 @@ import com.pw.thunderchat.model.Chat;
 import com.pw.thunderchat.model.Messages;
 import com.pw.thunderchat.service.ChatService;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("/chat")
 public class ChatController {
@@ -34,6 +36,8 @@ public class ChatController {
 	 * @return
 	 */
 	@GetMapping("/{idUserOne}/{idUserTwo}")
+	@ApiOperation("Rota resposavel por pegar todas as mensagens trocadas entre dois usuário, não existe "
+			+ "diferença na ordem que os ids são inseridos na url!")
 	public Chat getAllMessagesFromTwoUser(@PathVariable("idUserOne") String userOne,
 			@PathVariable("idUserTwo") String userTwo) {
 		return this.chatService.getMsgsFromUsers(userOne, userTwo);
