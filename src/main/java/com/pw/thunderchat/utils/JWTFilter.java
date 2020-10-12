@@ -30,19 +30,19 @@ public class JWTFilter extends OncePerRequestFilter {
 	private JWTUtils jwtUtils;
 
 	/**
-	 * Sobrescrita do método doFilterInternal Tem como objetivo filtar e validar as
+	 * Sobrescrita do método doFilterInternal Tem como objetivo filtrar e validar as
 	 * requisições feitas na API usando JWT
 	 */
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		String auth = request.getHeader("Authorization");
-		// Isso é uma abominação, mas funciona...
 		final String authorizationHeader = auth == null ? request.getParameter("Authorization") : auth;
 
 		System.out.println(authorizationHeader + " auth-header");
 		String jwt = null;
 		String username = null;
+		
 
 		if (authorizationHeader != null && authorizationHeader.startsWith("Bearer")) {
 			jwt = authorizationHeader.substring(7);

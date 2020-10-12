@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
-public class ErrorController {
+public class ErrorController{
 
 
 	@ExceptionHandler(NotFoundException.class)
@@ -28,4 +28,5 @@ public class ErrorController {
 		return new ResponseEntity<ErrorResponse>(new ErrorResponse(ex.getMessage(), "CONFLICT", LocalDateTime.now()),
 				HttpStatus.CONFLICT);
 	}
+	
 }

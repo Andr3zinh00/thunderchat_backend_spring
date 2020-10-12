@@ -22,7 +22,7 @@ import java.util.function.Function;
 public class JWTUtils {
 
 	// SERÁ SUBSTITUIDO POR UMA VARIAVEL DE AMBIENTE
-	private String SECRET_KEY = "secret";
+	private final String SECRET_KEY = "secret";
 
 	public String extractUsername(String token) {
 		return extractClaim(token, Claims::getSubject);
