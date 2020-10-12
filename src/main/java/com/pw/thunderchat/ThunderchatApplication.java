@@ -11,7 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
  */
 @SpringBootApplication
 @ComponentScan({ "com.pw.thunderchat.service", "com.pw.thunderchat.controller", "com.pw.thunderchat.config",
-		"com.pw.thunderchat.utils" })
+		"com.pw.thunderchat.utils","com.pw.thunderchat.errorhandler" })
 public class ThunderchatApplication {
 
 	public static void main(String[] args) {

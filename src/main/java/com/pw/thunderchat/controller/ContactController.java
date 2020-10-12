@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.pw.thunderchat.model.Contact;
 import com.pw.thunderchat.model.User;
 import com.pw.thunderchat.service.ContactService;
 
@@ -33,6 +35,12 @@ public class ContactController {
 	@GetMapping("/{id}")
 	public Map<String, List<User>> getContactsById(@PathVariable(value = "id") String id) {
 		return Collections.singletonMap("contacts", this.contactService.getContacts(id));
+	}
+
+	@DeleteMapping("/{wantToDel}/{toDel}")
+	public Contact deleteContact(@PathVariable("wantToDel") String wantTodel, @PathVariable("toDel") String toDel) {
+
+		return this.contactService.delContact(wantTodel, toDel);
 	}
 
 }

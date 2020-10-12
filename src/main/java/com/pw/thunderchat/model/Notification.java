@@ -1,5 +1,6 @@
 package com.pw.thunderchat.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -19,12 +20,20 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Document(collection = "notifications")
 public class Notification {
-	
+
+	public Notification(boolean checked, User user, ArrayList<Messages> notificationContent) {
+		this.checked = checked;
+		this.user = user;
+		this.notificationContent = notificationContent;
+	}
+
 	@Id
 	private String _id;
-	
+
 	@DBRef
 	private User user;
-	
-	private List<Messages> notificationContent; 
+
+	private boolean checked;
+
+	private List<Messages> notificationContent;
 }

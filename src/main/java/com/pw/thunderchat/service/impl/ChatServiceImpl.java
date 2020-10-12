@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import com.pw.thunderchat.errorhandler.NotFoundException;
 import com.pw.thunderchat.model.Chat;
 import com.pw.thunderchat.model.Messages;
 import com.pw.thunderchat.model.User;
@@ -60,10 +61,27 @@ public class ChatServiceImpl implements ChatService {
 			messages.add(msg);
 			this.chatRepository.save(chat);
 
-			// boa persistencia, primeiramente salva as msgs no bd e depois manda para os destinatarios
+			// boa persistencia, primeiramente salva as msgs no bd e depois manda para os
+			// destinatarios
 //			this.simpMessageTemplate.convertAndSendToUser(msg.getTo(), "/queue/get-msg", msg);
 //			this.simpMessageTemplate.convertAndSendToUser(msg.getFrom(), "/queue/get-msg", msg);
 		}
+
+	}
+
+	@Override
+	public Chat getMsgsFromUsers(String userOne, String userTwo) {
+
+		return this.chatRepository.findChatByMember(userOne, userTwo).orElseThrow(() -> new NotFoundException(
+				"Nenhum chat foi encontrado entre os usuários de id: " + userOne + " e " + userTwo));
+
+	}
+
+	@Override
+	public Chat delete(String wantToDel, String toDel) {
+
+		return this.chatRepository.deleteByUsersId(wantToDel, toDel).orElseThrow(() -> new NotFoundException(
+				"Nenhum chat foi encontrado entre os usuários de id: " + wantToDel + " e " + toDel));
 
 	}
 

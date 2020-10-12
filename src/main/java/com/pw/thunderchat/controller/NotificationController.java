@@ -39,6 +39,11 @@ public class NotificationController {
 	
 	}
 
+	/**
+	 * Pega todas as notificações de um usuário 
+	 * @param id
+	 * @return
+	 */
 	@GetMapping("/notifications/{id}")
 	public Map<String, List<Messages>> getAllNotificationsFromUser(@PathVariable String id) {
 		return Collections.singletonMap("notifications", this.notificationService.getAllNotificationById(id));

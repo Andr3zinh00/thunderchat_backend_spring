@@ -19,7 +19,6 @@ public class NotificationServiceImpl implements NotificationService {
 
 	@Autowired
 	NotificationRepository notificationRepository;
-	
 
 	@Autowired
 	SimpMessagingTemplate simpMessageTemplate;
@@ -39,12 +38,16 @@ public class NotificationServiceImpl implements NotificationService {
 
 		List<Messages> list = notifications.getNotificationContent();
 
+		// só cadastra/manda pro user se a msg não existir no Mongo Atlas
 		if (messageAlreadyExists(list, msg))
 			return;
 
+		// Marca que o usuário tem notifição nova pra checar
+		// e adiciona a notificao em si
+		notifications.setChecked(false);
 		list.add(msg);
 
-		this.notificationRepository.save(notifications);	
+		this.notificationRepository.save(notifications);
 		simpMessageTemplate.convertAndSendToUser(msg.getTo(), "/queue/sendback", msg);
 
 	}
@@ -52,13 +55,9 @@ public class NotificationServiceImpl implements NotificationService {
 	@Override
 	public List<Messages> getAllNotificationById(String id) {
 		Notification notif = this.notificationRepository.getByUserId(id)
-				.orElseThrow(() -> new NotFoundException("Notificações não encontradas"));
+				.orElseThrow(() -> new NotFoundException("Notificações não encontradas para o usuário de id: " + id));
 
-		List<Messages> notifications = notif.getNotificationContent();
-		if (notifications.size() == 0) {
-			throw new NotFoundException("Não possui notificações");
-		}
-		return notifications;
+		return notif.getNotificationContent();
 	}
 
 	public boolean messageAlreadyExists(List<Messages> list, Messages msg) {
