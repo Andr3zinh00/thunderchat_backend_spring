@@ -82,10 +82,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 
 //		http.cors().and().authorizeRequests().anyRequest().authenticated().and().httpBasic();
-		http.cors().and().authorizeRequests().antMatchers("/user/create", "/user/login", "/docs.html").permitAll()
-				.anyRequest().authenticated().and().sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+		http.cors();
 		http.csrf().disable();
 		http.exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
 	}
