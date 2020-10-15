@@ -34,7 +34,7 @@ public class User {
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private String password;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "YYYY-MM-dd")
 	private LocalDate birth_date;
 
 	private String email;
