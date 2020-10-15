@@ -24,7 +24,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
 		registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
 		registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
 		registry.addResourceHandler("/webjars/**")
-		.addResourceLocations("classpath:/META-INF/resources/webjars/")
+		.addResourceLocations("classpath:/META-INF/resources/webjars/");
 	}
 
 	@Bean
@@ -39,4 +39,6 @@ public class SwaggerConfig implements WebMvcConfigurer {
 				.license("Thunderchat license").version("1.0").build();
 
 	}
+	
+
 }
