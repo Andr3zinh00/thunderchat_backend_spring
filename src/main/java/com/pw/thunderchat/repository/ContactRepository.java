@@ -11,6 +11,6 @@ import com.pw.thunderchat.model.Contact;
 @Repository
 public interface ContactRepository extends MongoRepository<Contact, String> {
 
-	@Query("{userId:?0}")
+	@Query("{user:?0}")
 	Optional<Contact> findContactByUserId(String userId);
 }
