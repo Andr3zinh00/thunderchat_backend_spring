@@ -74,7 +74,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring().antMatchers("/v2/api-docs", "/swagger-resources/configuration/ui", "/swagger-resources",
-				"/swagger-resources/configuration/security", "/docs.html", "/webjars/**");
+				"/swagger-resources/configuration/security", "/swagger-ui.html", "/webjars/**");
 
 	}
 
@@ -82,7 +82,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 
 //		http.cors().and().authorizeRequests().anyRequest().authenticated().and().httpBasic();
-		http.cors();
+		http.cors().and().authorizeRequests().antMatchers("/user/create", "/user/login", "/swagger-ui.html").permitAll()
+				.anyRequest().authenticated().and().sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 		http.csrf().disable();
 		http.exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
 	}
