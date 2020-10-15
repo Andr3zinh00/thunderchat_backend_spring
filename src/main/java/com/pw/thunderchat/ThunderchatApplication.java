@@ -1,8 +1,10 @@
 package com.pw.thunderchat;
 
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+
 
 /**
  * @author André
@@ -11,11 +13,13 @@ import org.springframework.context.annotation.ComponentScan;
  */
 @SpringBootApplication
 @ComponentScan({ "com.pw.thunderchat.service", "com.pw.thunderchat.controller", "com.pw.thunderchat.config",
-		"com.pw.thunderchat.utils","com.pw.thunderchat.errorhandler" })
+		"com.pw.thunderchat.utils", "com.pw.thunderchat.errorhandler" })
 public class ThunderchatApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ThunderchatApplication.class, args);
 	}
+
+
 
 }

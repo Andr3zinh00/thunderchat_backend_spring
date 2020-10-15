@@ -2,8 +2,7 @@ package com.pw.thunderchat.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import java.time.LocalDate;
+import java.util.Date;
 import java.lang.String;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -12,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Data;
+
 
 /**
  * Classe de modelo para o Usuário da aplicação
@@ -34,8 +34,7 @@ public class User {
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private String password;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "YYYY-MM-dd")
-	private LocalDate birth_date;
+	private Date birth_date;
 
 	private String email;
 

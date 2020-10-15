@@ -33,6 +33,7 @@ import com.pw.thunderchat.utils.JWTFilter;
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+
 	@Autowired
 	private UserDetailImpl userDetail;
 
