@@ -10,4 +10,6 @@ public interface NotificationService {
 	
 	List<Messages> getAllNotificationById(String id);
 	
+	String delete(String id, Messages msg);
+	
 }

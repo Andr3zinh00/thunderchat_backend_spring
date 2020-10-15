@@ -17,22 +17,18 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfig implements WebMvcConfigurer {
 
-	 @Override
-	    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
-	        registry
-	                .addResourceHandler("swagger-ui.html")
-	                .addResourceLocations("classpath:/META-INF/resources/");
+		registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
+		registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+	}
 
-	        registry
-	                .addResourceHandler("/webjars/**")
-	                .addResourceLocations("classpath:/META-INF/resources/webjars/");
-	    }
 	@Bean
 	public Docket postsApi() {
 		return new Docket(DocumentationType.SWAGGER_2).groupName("ThunderChat").apiInfo(apiInfo()).select()
-				.apis(RequestHandlerSelectors.basePackage("com.pw.thunderchat.controller")).paths(PathSelectors.any()).build();
-
+				.apis(RequestHandlerSelectors.basePackage("com.pw.thunderchat.controller")).paths(PathSelectors.any())
+				.build();
 	}
 
 	private ApiInfo apiInfo() {

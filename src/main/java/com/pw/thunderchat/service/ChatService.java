@@ -5,7 +5,9 @@ import com.pw.thunderchat.model.Messages;
 import com.pw.thunderchat.model.User;
 
 /**
- * @author André Contrato do service de chat
+ * Contrato do service de chat
+ * 
+ * @author André
  *
  */
 public interface ChatService {

@@ -19,6 +19,6 @@ public interface ChatRepository extends MongoRepository<Chat, String> {
 	@DeleteQuery("{ $or: [ {memberOne:?0, memberTwo:?1}, {memberOne:?1, memberTwo:?0} ] }")
 	Optional<Chat> deleteByUsersId(String memberOneId, String memberTwoId);
 
-	@Query("{$or:[{memberOne:?0}, {memberTwo:?0}]}")
+	@Query("{$or:[{ memberOne: ?0 }, { memberTwo: ?0 }]}")
 	Optional<List<Chat>> findAllChatsByUserId(String userId);
 }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import com.pw.thunderchat.errorhandler.BadRequestException;
 import com.pw.thunderchat.errorhandler.NotFoundException;
 import com.pw.thunderchat.model.Messages;
 import com.pw.thunderchat.model.Notification;
@@ -64,6 +65,25 @@ public class NotificationServiceImpl implements NotificationService {
 		return list.stream().anyMatch(message -> {
 			return message.getFrom().equals(msg.getFrom()) && msg.getType().equals(message.getType());
 		});
+	}
+
+	@Override
+	public String delete(String id, Messages msg) {
+		if (id.equals(null))
+			throw new BadRequestException("O id não deve ser nulo");
+
+		if (msg.equals(null))
+			throw new BadRequestException("A mensagem a ser apagada não pode ser nula");
+
+		Notification notification = this.notificationRepository.findById(id)
+				.orElseThrow(() -> new NotFoundException("Não foi possível encontrar um usuário com o id: " + id));
+
+		if (!notification.getNotificationContent().contains(msg))
+			throw new NotFoundException("Notificação não encontrada!");
+
+		notification.getNotificationContent().remove(msg);
+		this.notificationRepository.save(notification);
+		return "Notificação deletada com sucesso";
 	}
 
 }

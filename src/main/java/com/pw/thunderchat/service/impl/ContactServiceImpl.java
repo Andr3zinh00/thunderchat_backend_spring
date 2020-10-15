@@ -14,8 +14,10 @@ import com.pw.thunderchat.errorhandler.NotFoundException;
 import com.pw.thunderchat.model.Contact;
 import com.pw.thunderchat.model.EMessageType;
 import com.pw.thunderchat.model.Messages;
+import com.pw.thunderchat.model.Notification;
 import com.pw.thunderchat.model.User;
 import com.pw.thunderchat.repository.ContactRepository;
+import com.pw.thunderchat.repository.NotificationRepository;
 import com.pw.thunderchat.repository.UserRepository;
 import com.pw.thunderchat.service.ChatService;
 import com.pw.thunderchat.service.ContactService;
@@ -32,6 +34,9 @@ public class ContactServiceImpl implements ContactService {
 
 	@Autowired
 	UserRepository userRepository;
+
+	@Autowired
+	NotificationRepository notificationRepository;
 
 	@Autowired
 	ChatService chatService;
@@ -62,21 +67,25 @@ public class ContactServiceImpl implements ContactService {
 		listWant.add(isGoingToBeAdded);
 		Contact alreadyAdded = getContactByUserId(isGoingToBeAdded.get_id());
 
-		User user = this.userRepository.findById(wantsToAdd.getUserId())
-				.orElseThrow(() -> new NotFoundException("Usuário inexistente"));
-
-		alreadyAdded.getContactsList().add(user);
+		alreadyAdded.getContactsList().add(wantsToAdd.getUser());
 
 		this.contactRepository.saveAll(Arrays.asList(alreadyAdded, wantsToAdd));
 
 		// quem mandou o pedido é o memberOne do chat
-		this.chatService.create(user, isGoingToBeAdded);
+		this.chatService.create(wantsToAdd.getUser(), isGoingToBeAdded);
 
-		Messages msg = new Messages(user.getMention() + " aceitou seu pedido e agora está na sua lista de contatos :D",
+		Messages msg = new Messages(
+				wantsToAdd.getUser().getMention() + " aceitou seu pedido e agora está na sua lista de contatos :D",
 				"SYSTEM", isGoingToBeAdded.getMention(), EMessageType.INVITE_ACCEPTED, new Date());
 
 		simpMessageTemplate.convertAndSendToUser(isGoingToBeAdded.getMention(), "/queue/sendback", msg);
-
+		
+		//depois que manda a mensagem, salva ela nas notificações do usuário
+		Notification notif = this.notificationRepository.getByUserId(userId).orElseThrow(
+				() -> new NotFoundException("O usuário de id: " + userId + " não possui um documento de notificação!"));
+		notif.getNotificationContent().add(msg);
+		this.notificationRepository.save(notif);
+		
 		return "Contato adicionado com sucesso!";
 	}
 

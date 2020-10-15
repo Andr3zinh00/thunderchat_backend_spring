@@ -62,10 +62,10 @@ public class UserServiceImpl implements UserService {
 		User nUser = this.userRepository.save(user);
 
 		Contact c = new Contact();
-		c.setUserId(nUser.get_id());
+		c.setUser(nUser);
 		c.setContactsList(new ArrayList<User>());
 
-		Notification notif = new Notification(true, user, new ArrayList<Messages>());
+		Notification notif = new Notification(true, nUser, new ArrayList<Messages>());
 
 		this.contactRepository.save(c);
 		this.notificationRepository.save(notif);

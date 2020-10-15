@@ -1,4 +1,4 @@
-package com.pw.thunderchat.model;
+package com.pw.thunderchat.model.responsehandler;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

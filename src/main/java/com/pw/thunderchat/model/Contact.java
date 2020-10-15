@@ -28,7 +28,7 @@ public class Contact {
 
 	@DBRef
 	@NonNull
-	private String userId;
+	private User user;
 
 	@DBRef
 	List<User> contactsList;
