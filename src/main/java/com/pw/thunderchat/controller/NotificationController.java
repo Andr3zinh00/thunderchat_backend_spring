@@ -31,11 +31,7 @@ public class NotificationController {
 	 */
 	@MessageMapping("/send-notification")
 	public void send(@Payload Messages notification) throws Exception {
-
-		if (!notification.getTo().startsWith("@"))
-			return;
-
-		
+		System.out.println(notification+"cheguei");
 		this.notificationService.registerNotification(notification);
 	
 	}

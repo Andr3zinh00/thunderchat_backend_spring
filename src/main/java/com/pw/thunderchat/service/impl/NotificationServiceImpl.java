@@ -29,16 +29,20 @@ public class NotificationServiceImpl implements NotificationService {
 
 	@Override
 	public void registerNotification(Messages msg) {
+		simpMessageTemplate.convertAndSendToUser(msg.getTo(), "/queue/sendback", msg);
+		simpMessageTemplate.convertAndSendToUser(msg.getFrom(), "/queue/sendback", msg);
 		User user = this.userRepo.findUserByName(msg.getTo());
-
+		System.out.println("sdfghjklkjhgfds");
 		if (user == null)
 			return;
+		System.out.println("USERRRRRRRRRRR"+user);
 
 		Notification notifications = this.notificationRepository.getByUserId(user.get_id())
 				.orElseThrow(() -> new NotFoundException("Usuario nao encontrado"));
 
 		List<Messages> list = notifications.getNotificationContent();
 
+		System.out.println(list);
 		// só cadastra/manda pro user se a msg não existir no Mongo Atlas
 		if (messageAlreadyExists(list, msg))
 			return;
@@ -49,7 +53,7 @@ public class NotificationServiceImpl implements NotificationService {
 		list.add(msg);
 
 		this.notificationRepository.save(notifications);
-		simpMessageTemplate.convertAndSendToUser(msg.getTo(), "/queue/sendback", msg);
+//		simpMessageTemplate.convertAndSendToUser(msg.getTo(), "/queue/sendback", msg);
 
 	}
 
