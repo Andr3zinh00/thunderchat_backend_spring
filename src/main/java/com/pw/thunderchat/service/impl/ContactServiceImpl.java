@@ -78,7 +78,7 @@ public class ContactServiceImpl implements ContactService {
 				wantsToAdd.getUser().getMention() + " aceitou seu pedido e agora está na sua lista de contatos :D",
 				"SYSTEM", isGoingToBeAdded.getMention(), EMessageType.INVITE_ACCEPTED, new Date());
 
-		simpMessageTemplate.convertAndSendToUser(isGoingToBeAdded.getMention(), "/queue/sendback", msg);
+		simpMessageTemplate.convertAndSendToUser(wantsToAdd.getUser().getMention(), "/queue/sendback", msg);
 		
 		//depois que manda a mensagem, salva ela nas notificações do usuário
 		Notification notif = this.notificationRepository.getByUserId(userId).orElseThrow(
