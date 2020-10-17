@@ -21,5 +21,6 @@ public class Messages {
 	private String to;
 	private EMessageType type;
 	private Date time;
+	private Boolean read;
 
 }

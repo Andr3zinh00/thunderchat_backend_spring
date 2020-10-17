@@ -33,7 +33,6 @@ import com.pw.thunderchat.utils.JWTFilter;
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-
 	@Autowired
 	private UserDetailImpl userDetail;
 
@@ -71,6 +70,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	public BCryptPasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
+
+//	@Bean
+//	public ValidatingMongoEventListener validatingMongoEventListener() {
+//		return new ValidatingMongoEventListener(validator());
+//	}
+//
+//	@Bean
+//	public LocalValidatorFactoryBean validator() {
+//		return new LocalValidatorFactoryBean();
+//	}
 
 	@Override
 	public void configure(WebSecurity web) throws Exception {

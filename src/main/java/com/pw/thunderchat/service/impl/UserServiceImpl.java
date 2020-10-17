@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.pw.thunderchat.errorhandler.BadRequestException;
 import com.pw.thunderchat.errorhandler.InvalidOperationException;
 import com.pw.thunderchat.errorhandler.NotFoundException;
 import com.pw.thunderchat.model.Chat;
@@ -122,24 +123,27 @@ public class UserServiceImpl implements UserService {
 	public User update(User user) {
 		System.out.println(user + "   userFromRequest");
 		List<User> possibleUsers = this.userRepository.findUserByMentionOrEmail(user.getMention(), user.getEmail());
-		System.out.println(possibleUsers);
 
 		if (possibleUsers.size() > 1)
 			throw new InvalidOperationException("A @ ou email escolhidos já estão em uso!");
 
 		User retrievedUser = possibleUsers.get(0);
 
-		System.out.println(retrievedUser + " retrievedUser");
 		parseUser(retrievedUser, user);
-		System.out.println(retrievedUser + " retrievedUser after parse");
 
 		return this.userRepository.save(retrievedUser);
 	}
 
 	public void parseUser(User userFromDb, User userFromRequest) {
+		System.out.println(userFromDb + "   " + userFromRequest);
+		//verifica se o usuário mandou a senha na requisição e se ela é menor que 6
+		if (userFromRequest.getPassword() != null && userFromRequest.getPassword().trim().length() < 6)
+			throw new BadRequestException("A senha deve conter no minimo 6 caracteres!");
 
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		if (!encoder.matches(userFromRequest.getPassword(), userFromDb.getPassword())) {
+		// faz a mesma comparação aqui pra saber se o usuário quer ou não mudar a senha
+		if (userFromRequest.getPassword() != null
+				&& !encoder.matches(userFromRequest.getPassword(), userFromDb.getPassword())) {
 			String encodedPassword = encoder.encode(userFromRequest.getPassword());
 			userFromDb.setPassword(encodedPassword);
 		}

@@ -12,30 +12,30 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Data;
 
-
 /**
  * Classe de modelo para o Usuário da aplicação
  * 
  * @author André
  */
-@Document(collection = "users")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Document(collection = "users")
 public class User {
 
 	@Id
 	private String _id;
-
+	
+	
 	private String name;
-
+	
 	private String mention;
 
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private String password;
-
+	
 	private Date birth_date;
-
+	
 	private String email;
 
 }

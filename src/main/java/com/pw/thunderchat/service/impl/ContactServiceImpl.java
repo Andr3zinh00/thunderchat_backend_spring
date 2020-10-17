@@ -76,7 +76,7 @@ public class ContactServiceImpl implements ContactService {
 
 		Messages msg = new Messages(
 				wantsToAdd.getUser().getMention() + " aceitou seu pedido e agora está na sua lista de contatos :D",
-				"SYSTEM", isGoingToBeAdded.getMention(), EMessageType.INVITE_ACCEPTED, new Date());
+				"SYSTEM", isGoingToBeAdded.getMention(), EMessageType.INVITE_ACCEPTED, new Date(), false);
 
 		simpMessageTemplate.convertAndSendToUser(mention, "/queue/sendback", msg);
 		
