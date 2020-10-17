@@ -38,11 +38,14 @@ public class ContactChatImpl implements ContactChatService {
 
 		List<ContactMessageResponse> contactWithMsg = new ArrayList<ContactMessageResponse>();
 
-		chats.get().forEach(chat -> {
+		chats.get().forEach((chat) -> {
 			User memberOne = chat.getMemberOne();
+			System.out.println(memberOne.get_id() + "IIIIIDDDDD");
 			User user = memberOne.get_id().equals(id) ? chat.getMemberTwo() : memberOne;
 			List<Messages> msgs = chat.getMessages();
-			contactWithMsg.add(new ContactMessageResponse(msgs.get(msgs.size() - 1), user));
+			System.out.println(msgs + "msgsssssss");
+			contactWithMsg.add(
+					new ContactMessageResponse(msgs.size() == 0 ? null : msgs.get(msgs.size() - 1), user));
 		});
 
 		return new Response<List<ContactMessageResponse>>("Contatos localizados com sucesso", contactWithMsg);

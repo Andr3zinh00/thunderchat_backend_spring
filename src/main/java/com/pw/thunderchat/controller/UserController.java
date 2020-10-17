@@ -54,6 +54,7 @@ public class UserController {
 	}
 
 	@PostMapping("/create")
+	@ApiOperation("Não é necessario passar o ID nessa rota, só os outros campos")
 	public User createUser(@RequestBody User user) {
 		return userService.create(user);
 	}
@@ -83,8 +84,8 @@ public class UserController {
 	public User update(@RequestBody User user, @PathVariable String id) {
 
 		if (!id.equals(user.get_id()))
-			throw new BadRequestException("O id informado não é invalido para o usuário que deseja alterar");
-		return this.userService.update(user);
+			throw new BadRequestException("O id informado na url não é valido para o usuário que deseja alterar");
+		return this.userService.update(user); 
 	}
 
 	@DeleteMapping("/{id}")

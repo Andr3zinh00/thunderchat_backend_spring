@@ -1,1 +1,1 @@
-thunderchat-backend.herokuapp.com/swagger-ui.html
+Documentação: thunderchat-backend.herokuapp.com/swagger-ui.html
