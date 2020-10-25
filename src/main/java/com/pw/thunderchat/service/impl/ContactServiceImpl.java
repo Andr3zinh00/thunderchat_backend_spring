@@ -23,8 +23,10 @@ import com.pw.thunderchat.service.ChatService;
 import com.pw.thunderchat.service.ContactService;
 
 /**
- * @author André Service de contato Implementação do contrato explicito na
- *         interface ContactService
+ * Service de contato Implementação do contrato explicito na interface
+ * ContactService
+ * 
+ * @author André
  */
 @Service
 public class ContactServiceImpl implements ContactService {
@@ -75,17 +77,18 @@ public class ContactServiceImpl implements ContactService {
 		this.chatService.create(wantsToAdd.getUser(), isGoingToBeAdded);
 
 		Messages msg = new Messages(
-				wantsToAdd.getUser().getMention() + " aceitou seu pedido e agora está na sua lista de contatos :D",
-				"SYSTEM", isGoingToBeAdded.getMention(), EMessageType.INVITE_ACCEPTED, new Date(), false);
+				isGoingToBeAdded.getMention() + " aceitou seu pedido e agora está na sua lista de contatos :D",
+				"SYSTEM", wantsToAdd.getUser().getMention(), EMessageType.INVITE_ACCEPTED, new Date(), false);
+		System.out.println("pra quem ta mandando" + isGoingToBeAdded.getMention() + " outra pessoa envolvida "
+				+ wantsToAdd.getUser().getMention());
 
-		simpMessageTemplate.convertAndSendToUser(mention, "/queue/sendback", msg);
-		
-		//depois que manda a mensagem, salva ela nas notificações do usuário
-		Notification notif = this.notificationRepository.getByUserId(userId).orElseThrow(
+		simpMessageTemplate.convertAndSendToUser(wantsToAdd.getUser().getMention(), "/queue/sendback", msg);
+		// depois que manda a mensagem, salva ela nas notificações do usuário
+		Notification notif = this.notificationRepository.getByUserId(wantsToAdd.getUser().get_id()).orElseThrow(
 				() -> new NotFoundException("O usuário de id: " + userId + " não possui um documento de notificação!"));
 		notif.getNotificationContent().add(msg);
 		this.notificationRepository.save(notif);
-		
+
 		return "Contato adicionado com sucesso!";
 	}
 

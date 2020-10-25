@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -36,8 +37,10 @@ public class ChatServiceImpl implements ChatService {
 	@Override
 	public void sendMessageChat(Messages msg) {
 
-		// boa velocidade de comunicação ou boa persistencia?
+		// gera um ObjectId do MongoDb para identificar a mensagem depois!
+		msg.set_id(new ObjectId().toString());
 
+		// boa velocidade de comunicação ou boa persistencia?
 		// boa velocidade de comunicação
 		this.simpMessageTemplate.convertAndSendToUser(msg.getTo(), "/queue/get-msg", msg);
 		// manda para o proprio remetente pra caso ele estiver usando multiplas abas

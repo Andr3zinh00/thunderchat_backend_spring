@@ -13,4 +13,7 @@ public interface NotificationRepository extends MongoRepository<Notification, St
 
 	@Query("{ user:?0 }")
 	Optional<Notification> getByUserId(String userId);
+
+	@Query("{ $and:[ {_id: ?1 } ,{ notificationContent:{ $elemMatch:{_id: ?0 } }} ] }")
+	Optional<Notification> getNotificationByMessageIdAndNotificationId(String messageId, String notificationId);
 }

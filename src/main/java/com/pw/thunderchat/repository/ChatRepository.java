@@ -21,4 +21,7 @@ public interface ChatRepository extends MongoRepository<Chat, String> {
 
 	@Query("{$or:[{ memberOne: ?0 }, { memberTwo: ?0 }]}")
 	Optional<List<Chat>> findAllChatsByUserId(String userId);
+
+	@Query("{ $and:[ {_id: ?1 } ,{ messages:{ $elemMatch:{_id: ?0 } }  }] }")
+	Optional<Chat> getChatByMessageIdAndChatId(String messageId, String chatId);
 }

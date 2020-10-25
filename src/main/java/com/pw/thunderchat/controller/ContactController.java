@@ -31,7 +31,7 @@ public class ContactController {
 	@PostMapping("/add")
 	@ApiOperation("Este método emite uma mensagem (websocket) na rota (/queue/sendback), caso a operação (addContact)"
 			+ " seja concluida com sucesso, esta mensagem deve ser capturada no frontend para fazer "
-			+ "a adição do contato em tempo real, PS: Se der algum erro aqui, é pq mexi no controller")
+			+ "a adição do contato em tempo real.")
 	public Map<String, String> addContact(@RequestBody Map<String, String> json) {
 		return Collections.singletonMap("message",
 				this.contactService.addContact(json.get("mention"), json.get("userId")));
@@ -39,7 +39,7 @@ public class ContactController {
 
 	@GetMapping("/{id}")
 	@Deprecated
-	@ApiOperation("Use a rota xxx, que pega todos os contatos + a ultima msg trocada entre eles")
+	@ApiOperation("Use a rota /contact-chat, que pega todos os contatos + a ultima msg trocada entre eles")
 	public Map<String, List<User>> getContactsById(@PathVariable(value = "id") String id) {
 		return Collections.singletonMap("contacts", this.contactService.getContacts(id));
 	}

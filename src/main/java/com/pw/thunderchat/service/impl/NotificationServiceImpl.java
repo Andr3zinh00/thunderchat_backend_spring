@@ -2,6 +2,7 @@ package com.pw.thunderchat.service.impl;
 
 import java.util.List;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -29,13 +30,10 @@ public class NotificationServiceImpl implements NotificationService {
 
 	@Override
 	public void registerNotification(Messages msg) {
-		simpMessageTemplate.convertAndSendToUser(msg.getTo(), "/queue/sendback", msg);
-		simpMessageTemplate.convertAndSendToUser(msg.getFrom(), "/queue/sendback", msg);
+
 		User user = this.userRepo.findUserByName(msg.getTo());
-		System.out.println("sdfghjklkjhgfds");
 		if (user == null)
 			return;
-		System.out.println("USERRRRRRRRRRR"+user);
 
 		Notification notifications = this.notificationRepository.getByUserId(user.get_id())
 				.orElseThrow(() -> new NotFoundException("Usuario nao encontrado"));
@@ -47,10 +45,10 @@ public class NotificationServiceImpl implements NotificationService {
 		if (messageAlreadyExists(list, msg))
 			return;
 
-		// Marca que o usuário tem notifição nova pra checar
-		// e adiciona a notificao em si
-		notifications.setChecked(false);
 		list.add(msg);
+
+		msg.set_id(new ObjectId().toString());
+		simpMessageTemplate.convertAndSendToUser(msg.getTo(), "/queue/sendback", msg);
 
 		this.notificationRepository.save(notifications);
 //		simpMessageTemplate.convertAndSendToUser(msg.getTo(), "/queue/sendback", msg);
@@ -58,11 +56,10 @@ public class NotificationServiceImpl implements NotificationService {
 	}
 
 	@Override
-	public List<Messages> getAllNotificationById(String id) {
-		Notification notif = this.notificationRepository.getByUserId(id)
+	public Notification getAllNotificationById(String id) {
+		return this.notificationRepository.getByUserId(id)
 				.orElseThrow(() -> new NotFoundException("Notificações não encontradas para o usuário de id: " + id));
 
-		return notif.getNotificationContent();
 	}
 
 	public boolean messageAlreadyExists(List<Messages> list, Messages msg) {
@@ -88,6 +85,10 @@ public class NotificationServiceImpl implements NotificationService {
 		notification.getNotificationContent().remove(msg);
 		this.notificationRepository.save(notification);
 		return "Notificação deletada com sucesso";
+	}
+
+	@Override
+	public void dispatchNewChatNotification(Messages msg) {
 	}
 
 }
