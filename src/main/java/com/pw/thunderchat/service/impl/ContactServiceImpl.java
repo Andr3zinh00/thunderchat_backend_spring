@@ -46,10 +46,6 @@ public class ContactServiceImpl implements ContactService {
 	@Autowired
 	SimpMessagingTemplate simpMessageTemplate;
 
-	/**
-	 * KKKKKKKKKKKKKK QUE MERDA FOI ESSA Q EU FIZ? NEM CONSIGO MAIS ENTENDER O QUE
-	 * ISSO ESTA FAZENDO DIREITO
-	 */
 	@Override
 	public String addContact(String mention, String userId) {
 
@@ -77,14 +73,14 @@ public class ContactServiceImpl implements ContactService {
 		this.chatService.create(wantsToAdd.getUser(), isGoingToBeAdded);
 
 		Messages msg = new Messages(
-				isGoingToBeAdded.getMention() + " aceitou seu pedido e agora está na sua lista de contatos :D",
-				"SYSTEM", wantsToAdd.getUser().getMention(), EMessageType.INVITE_ACCEPTED, new Date(), false);
+				wantsToAdd.getUser().getMention() + " aceitou seu pedido e agora está na sua lista de contatos :D",
+				"SYSTEM",isGoingToBeAdded.getMention(), EMessageType.INVITE_ACCEPTED, new Date(), false);
 		System.out.println("pra quem ta mandando" + isGoingToBeAdded.getMention() + " outra pessoa envolvida "
 				+ wantsToAdd.getUser().getMention());
 
-		simpMessageTemplate.convertAndSendToUser(wantsToAdd.getUser().getMention(), "/queue/sendback", msg);
+		simpMessageTemplate.convertAndSendToUser(isGoingToBeAdded.getMention(), "/queue/sendback", msg);
 		// depois que manda a mensagem, salva ela nas notificações do usuário
-		Notification notif = this.notificationRepository.getByUserId(wantsToAdd.getUser().get_id()).orElseThrow(
+		Notification notif = this.notificationRepository.getByUserId(isGoingToBeAdded.get_id()).orElseThrow(
 				() -> new NotFoundException("O usuário de id: " + userId + " não possui um documento de notificação!"));
 		notif.getNotificationContent().add(msg);
 		this.notificationRepository.save(notif);

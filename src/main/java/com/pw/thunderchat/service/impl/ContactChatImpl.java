@@ -40,7 +40,6 @@ public class ContactChatImpl implements ContactChatService {
 
 		chats.get().forEach((chat) -> {
 			User memberOne = chat.getMemberOne();
-			System.out.println(memberOne.get_id() + "IIIIIDDDDD");
 			User user = memberOne.get_id().equals(id) ? chat.getMemberTwo() : memberOne;
 			List<Messages> msgs = chat.getMessages();
 			System.out.println(msgs + "msgsssssss");
